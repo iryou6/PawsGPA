@@ -29,8 +29,14 @@ function parseHTML(myText){
 // }
 		var gpaInfo=makeDict(myArray);
 		// document.getElementById('message').textContent = gpaInfo;
-		formatCheckBoxes(gpaInfo);	
-
+		formatCheckBoxes(gpaInfo);
+		changeButton();
+    var button = document.getElementById('getGPA');
+    button.addEventListener('click',function(){
+        // document.getElementById("GPA").textContent = "Average GPA: " ;
+        // document.getElementById("GPA").style.display = "block";
+        getGPA(gpaInfo);
+    })
 
 // 	document.getElementById('getClasses').textContent = "Get courses!";
 //         if (myText !== "parsing"){
@@ -45,6 +51,25 @@ function parseHTML(myText){
 //                 return gpaInfo;
 //         };
 };
+
+function getGPA(gpa){
+    var sumCreds = 0;
+    var sumGPA = 0;
+    var id; var input;
+    for (i = 0; i<gpa.length;i++){
+        id = gpa[i][0]+gpa[i][1];
+            if (document.getElementById("ch"+i).checked){
+                // if (gpa[i][3] === "CR"){
+                //     continue;
+                // }
+                sumGPA = sumGPA + gpa[i][5]*gpa[i][4];
+                sumCreds = sumCreds + gpa[i][4];
+            }//}
+        }
+        document.getElementById("GPA").textContent = "Average GPA: " + sumGPA/sumCreds;
+        document.getElementById("GPA").style.display = "block";
+}
+
 function makeDict(myArray){
 	//var gpaInfo = new Array();
 	var re, sub, title, params, credits, Grade, gradeNum, creditsNum, subNum;
@@ -68,11 +93,12 @@ function makeDict(myArray){
                         title = title[0].replace(">","").replace("<","");
                         Grade = params[5].match(/>(\S*?\s*?)*?</i);
                         Grade = Grade[0].replace("\>","").replace("<","");
+                        gradeNum=gradeToNum(Grade);
                         // // gradeNum = gradeToNum(letterGrade);
                         credits = params[6].match(/rightaligntext">(\S*?\s*?)*?</i);
                         credits = credits[0].replace("rightaligntext\"\>","").replace("<","");
                         creditsNum = parseFloat(credits);
-                        gpaInfo[n] = [sub,subNum,title,Grade,creditsNum];
+                        gpaInfo[n] = [sub,subNum,title,Grade,creditsNum,gradeNum];
                         // gpaInfo[n]=creditsNum;
                         n = n+1;
                     }
@@ -83,6 +109,16 @@ function makeDict(myArray){
 	}
 	return gpaInfo;
 }
+
+function changeButton(){
+    // var button = document.getElementById('getClasses');
+    // button.style.display = "none";
+    var button2 = document.getElementById('getGPA');
+    button2.style.display = "block";
+    // document.getElementById("message").textContent = "Please choose the courses you would like factored into your GPA:";
+    
+}
+
 function checkvalid(temp){
   if((temp.match(/dddefault/g)|| []).length>7){
     return true;
@@ -90,6 +126,50 @@ function checkvalid(temp){
   else{
     return false;
   }
+}
+function gradeToNum(grade){
+    if (grade === "P"){
+        return 4.0;
+    }
+  // if (grade === "W"){
+  //       return "W";
+  //   }
+  if(grade.length==3){
+    grade.slice(0,-1);
+  }
+  var gradeint=parseInt(grade);
+	var num = 0.0;
+        if (gradeint>84){
+            num = 4.0; }
+        else if (gradeint>79){
+            num = 3.7; }
+        else if (gradeint>76){
+            num = 3.3; }
+        else if (gradeint>72){
+            num = 3.0; }
+        else if (gradeint>69){
+            num = 2.7; }
+        else if (gradeint>66){
+            num = 2.3; }
+        else if (gradeint>62){
+            num = 2.0; }
+        else if (gradeint>59){
+            num = 1.7; }
+        else if (gradeint>56){
+            num = 1.3; }
+        else if (gradeint>52){
+            num = 1.0; }
+        else if (gradeint>49){
+            num = 1.7; }
+        else{
+          num=0.0;}
+// 	if (grade.length === 2){
+// 		if (grade[1] === "+"){
+//                     num = num +.3333;}
+//                 if (grade[1] === "-"){
+//                     num = num -.3333;}
+// 	}
+	return num;
 }
 function formatCheckBoxes(gpaInfo){
     for (i = 0; i<gpaInfo.length; i++){

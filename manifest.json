@@ -1,8 +1,8 @@
 {
-  "name": "Get pages source",
+  "name": "CalPawsGPA",
   "version": "1.0",
   "manifest_version": 2,
-  "description": "Get pages source from a popup",
+  "description": "calculate GPA for uofs student",
   "browser_action": {
     "default_icon": "icon.png",
     "default_popup": "popup.html"
